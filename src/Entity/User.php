@@ -7,7 +7,7 @@ use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity('email')]
+
 class User
 {
     #[ORM\Id]

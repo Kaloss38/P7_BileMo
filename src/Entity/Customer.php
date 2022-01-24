@@ -6,10 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-#[UniqueEntity('email')]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'Cette e-mail existe déjà.',
+)]
 class Customer
 {
     #[ORM\Id]
@@ -24,9 +30,23 @@ class Customer
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Votre e-mail doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Votre e-mail doit contenir moins de {{ limit }} caractères',
+    )]
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Votre mot de passe doit contenir moins de {{ limit }} caractères',
+    )]
     private $password;
 
     #[ORM\Column(type: 'datetime')]
@@ -34,9 +54,6 @@ class Customer
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
-
-    #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Product::class)]
-    private $products;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: User::class)]
     private $users;
@@ -114,42 +131,16 @@ class Customer
 
     public function getRoles(): ?array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Product[]
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->setCustomer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getCustomer() === $this) {
-                $product->setCustomer(null);
-            }
-        }
 
         return $this;
     }

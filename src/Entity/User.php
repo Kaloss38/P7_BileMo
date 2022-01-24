@@ -5,8 +5,15 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'Cette e-mail existe déjà.',
+)]
 
 class User
 {
@@ -16,25 +23,57 @@ class User
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Votre nom doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Votre nom doit contenir moins de {{ limit }} caractères',
+    )]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Votre prénom doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Votre prénom doit contenir moins de {{ limit }} caractères',
+    )]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Votre e-mail doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Votre e-mail doit contenir moins de {{ limit }} caractères',
+    )]
     private $email;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Votre adresse doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Votre adresse doit contenir moins de {{ limit }} caractères',
+    )]
     private $address;
 
     #[ORM\Column(type: 'integer')]
     private $zip;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Votre ville doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Votre ville doit contenir moins de {{ limit }} caractères',
+    )]
     private $city;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private $password;
 
     #[ORM\Column(type: 'datetime')]
     private $createdAt;
@@ -122,19 +161,7 @@ class User
 
         return $this;
     }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
+    
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;

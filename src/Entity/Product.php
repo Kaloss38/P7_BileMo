@@ -2,10 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProductRepository;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[UniqueEntity(
+    fields: ['name'],
+    message: 'Ce produit existe déjà.',
+)]
 class Product
 {
     #[ORM\Id]
@@ -30,13 +35,6 @@ class Product
 
     #[ORM\Column(type: 'datetime')]
     private $createdAt;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private $updatedAt;
-
-    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $customer;
 
     public function getId(): ?int
     {
@@ -111,30 +109,6 @@ class Product
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): self
-    {
-        $this->customer = $customer;
 
         return $this;
     }

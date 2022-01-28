@@ -4,12 +4,33 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[UniqueEntity(
     fields: ['name'],
     message: 'Ce produit existe déjà.',
+)]
+#[ApiResource(
+    itemOperations: [
+        "get" => [
+            "method" => "get",
+            "path" => "produits/{id}",
+            "openapi_context" => [
+                "summary" => "Récupérer tous les produits"
+            ]
+        ]
+    ],
+    collectionOperations: [
+        "get" => [
+            "method" => "get",
+            "path" => "/produits",
+            "openapi_context" => [
+                "summary" => "Récupérer un produit"
+            ]
+        ]
+    ]
 )]
 class Product
 {

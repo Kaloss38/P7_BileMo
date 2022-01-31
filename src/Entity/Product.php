@@ -2,9 +2,13 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProductRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -18,7 +22,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             "method" => "get",
             "path" => "produits/{id}",
             "openapi_context" => [
-                "summary" => "Récupérer tous les produits"
+                "summary" => "Récupérer un produit"
             ]
         ]
     ],
@@ -27,7 +31,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             "method" => "get",
             "path" => "/produits",
             "openapi_context" => [
-                "summary" => "Récupérer un produit"
+                "summary" => "Récupérer tous les produits"
             ]
         ]
     ]
@@ -40,18 +44,42 @@ class Product
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotNull]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Le nom doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Le nom doit contenir moins de {{ limit }} caractères',
+    )]
     private $name;
 
     #[ORM\Column(type: 'text')]
     private $description;
 
     #[ORM\Column(type: 'float')]
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: "Le prix {{ value }} n'est pas valide .",
+    )]
     private $price;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotNull]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Le fabricant doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Le fabricant doit contenir moins de {{ limit }} caractères',
+    )]
     private $manufacturer;
 
     #[ORM\Column(type: 'integer')]
+    #[Assert\NotNull]
+    #[Assert\Type(
+        type: 'integer',
+        message: "L'année de fabrication {{ value }} n'est pas valide .",
+    )]
     private $fabricationYear;
 
     #[ORM\Column(type: 'datetime')]
@@ -59,7 +87,7 @@ class Product
 
     public function __construct()
     {
-        $this->setCreatedAt(new \DateTime());
+        $this->setCreatedAt(new DateTimeImmutable());
     }
 
     public function getId(): ?int

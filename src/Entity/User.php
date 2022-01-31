@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -84,6 +85,11 @@ class User
     #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
     private $customer;
+
+    public function __construct()
+    {
+        $this->setCreatedAt(new DateTimeImmutable());        
+    }
 
     public function getId(): ?int
     {

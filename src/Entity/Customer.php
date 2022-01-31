@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CustomerRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Length;
@@ -26,9 +27,23 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Votre nom doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Votre nom doit contenir moins de {{ limit }} caractères',
+    )]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Votre prénom doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Votre prénom doit contenir moins de {{ limit }} caractères',
+    )]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -64,7 +79,7 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->products = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->setCreatedAt(new \DateTime());
+        $this->setCreatedAt(new DateTimeImmutable());
     }
 
     public function getId(): ?int
@@ -178,6 +193,14 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->getEmail();
+    }
+
+        /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
     }
 
     /**

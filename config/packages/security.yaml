@@ -42,7 +42,9 @@ security:
     access_control:
         - { path: ^/api/login,     roles: PUBLIC_ACCESS }
         - { path: ^/api/produits,  roles: IS_AUTHENTICATED_FULLY }
-
+        - { path: ^/api/utilisateurs,  roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/clients,  roles: IS_AUTHENTICATED_FULLY }
+        
 when@test:
     security:
         password_hashers:

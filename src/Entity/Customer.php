@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CustomerRepository;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,6 +20,23 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[UniqueEntity(
     fields: ['email'],
     message: 'Cette e-mail existe déjà.',
+)]
+#[ApiResource(
+    itemOperations: [
+        "get" => [
+            "method" => "get",
+            "path" => "clients/{id}/users",
+            "openapi_context" => [
+                "summary" => "Récupérer les utilisateurs lié à un client"
+            ],
+            "normalization_context" => [
+                "groups" => [
+                    "get_users"
+                ]
+            ]
+        ]
+    ],
+    collectionOperations: []
 )]
 class Customer implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -73,6 +92,7 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: User::class)]
+    #[Groups(["get_users"])]
     private $users;
 
     public function __construct()

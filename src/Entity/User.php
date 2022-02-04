@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,6 +16,47 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[UniqueEntity(
     fields: ['email'],
     message: 'Cette e-mail existe déjà.',
+)]
+#[ApiResource(
+    collectionOperations: [
+        "get" => [
+            "method" => "get",
+            "path" => "/utilisateurs",
+            "openapi_context" => [
+                "summary" => "Consulter la liste de tous les utilisateurs."
+            ]
+        ],
+        "post" => [
+            "method" => "post",
+            "path" => "/utilisateurs",
+            "openapi_context" => [
+                "summary" => "Ajouter un utilisateur lié à un client."
+            ]
+        ]
+    ],
+    itemOperations: [
+        "get" => [
+            "method" => "get",
+            "path" => "/utilisateurs/{id}",
+            "openapi_context" => [
+                "summary" => "Consulter le détail d'un utilisateur lié à un client."
+            ]
+        ],
+        "put" => [
+            "method" => "put",
+            "path" => "/utilisateurs/{id}",
+            "openapi_context" => [
+                "summary" => "Modifier un utilisateur lié à un client."
+            ]            
+        ],
+        "delete" => [
+            "method" => "delete",
+            "path" => "/utilisateurs/{id}",
+            "openapi_context" => [
+                "summary" => "Supprimer un utilisateur lié à un client."
+            ]
+        ]
+    ]
 )]
 class User
 {
@@ -78,9 +120,6 @@ class User
 
     #[ORM\Column(type: 'datetime')]
     private $createdAt;
-
-    #[ORM\Column(type: 'json')]
-    private $roles = [];
 
     #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
@@ -176,22 +215,6 @@ class User
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getRoles(): ?array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
 
         return $this;
     }

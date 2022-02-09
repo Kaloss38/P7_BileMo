@@ -33,6 +33,11 @@ To access Api documentation with apiPlatform, go on api route : ``http://127.0.0
 
 To access Api documentation in json format : ``http://127.0.0.1:8000//api/doc.json``
 
+### How to send Requests
+
+You can use a software like [Postman](https://www.postman.com/) to send your requests with this API !
+
+
 ### Symfony packages
 
 - [Security bundle](https://symfony.com/doc/current/security.html)

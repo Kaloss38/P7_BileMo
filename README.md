@@ -29,7 +29,14 @@ _your .env, database url line example_:
 
 ### BileMO API Documentation
 
-To access Api documentation, go on api route : ``http://127.0.0.1:8000/api``
+To access Api documentation with apiPlatform, go on api route : ``http://127.0.0.1:8000/api``
+
+To access Api documentation in json format : ``http://127.0.0.1:8000//api/doc.json``
+
+### How to send Requests
+
+You can use a software like [Postman](https://www.postman.com/) to send your requests with this API !
+
 
 ### Symfony packages
 
@@ -40,6 +47,7 @@ To access Api documentation, go on api route : ``http://127.0.0.1:8000/api``
 ### Bundles
 - [ApiPlatform](https://api-platform.com/)
 - [JWT authentication](https://github.com/lexik/LexikJWTAuthenticationBundle)
+- [Nelmio API doc Bundle](https://github.com/nelmio/NelmioApiDocBundle)
 
 
 

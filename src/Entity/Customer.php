@@ -25,7 +25,14 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     itemOperations: [
         "get" => [
             "method" => "get",
-            "path" => "clients/{id}/users",
+            "path" => "clients/{id}",
+            "openapi_context" => [
+                "summary" => "Récupérer les informations d'un client"
+            ]
+        ],
+        "getUtilisateurs" => [
+            "method" => "get",
+            "path" => "clients/{id}/utilisateurs",
             "openapi_context" => [
                 "summary" => "Récupérer les utilisateurs lié à un client"
             ],

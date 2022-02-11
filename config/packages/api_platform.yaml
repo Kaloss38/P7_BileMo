@@ -1,7 +1,10 @@
 api_platform:
+    defaults:
+        pagination_items_per_page: 5
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
+    enable_nelmio_api_doc: true

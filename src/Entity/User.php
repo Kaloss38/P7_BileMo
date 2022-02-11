@@ -19,13 +19,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 )]
 #[ApiResource(
     collectionOperations: [
-        "get" => [
-            "method" => "get",
-            "path" => "/utilisateurs",
-            "openapi_context" => [
-                "summary" => "Consulter la liste de tous les utilisateurs."
-            ]
-        ],
         "post" => [
             "method" => "post",
             "path" => "/utilisateurs",
